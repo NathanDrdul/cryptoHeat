@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+  <title>Treemap layout</title>
+</head>
+
+<style>
+rect {
+  fill:#6b5b95;
+  opacity: 0.3;
+  stroke: white;
+}
+</style>
+
+<body>
+  <svg width="800" height="800">
+    <g></g>
+  </svg>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+  <script>
+
+var cryptoArray = [
+    {
+        "id": "bitcoin", 
+        "name": "Bitcoin", 
+        "symbol": "BTC", 
+        "rank": "1", 
+        "price_usd": "8270.76", 
+        "price_btc": "1.0", 
+        "24h_volume_usd": "5189960000.0", 
+        "market_cap_usd": "140434610034", 
+        "available_supply": "16979650.0", 
+        "total_supply": "16979650.0", 
+        "max_supply": "21000000.0", 
+        "percent_change_1h": "-0.19", 
+        "percent_change_24h": "2.93", 
+        "percent_change_7d": "17.4", 
+        "last_updated": "1523827174"
+    }, 
+    {
+        "id": "ethereum", 
+        "name": "Ethereum", 
+        "symbol": "ETH", 
+        "rank": "2", 
+        "price_usd": "523.948", 
+        "price_btc": "0.0631903", 
+        "24h_volume_usd": "1678400000.0", 
+        "market_cap_usd": "51787830949.0", 
+        "available_supply": "98841547.0", 
+        "total_supply": "98841547.0", 
+        "max_supply": null, 
+        "percent_change_1h": "0.05", 
+        "percent_change_24h": "3.76", 
+        "percent_change_7d": "30.41", 
+        "last_updated": "1523827159"
+    }, 
+    {
+        "id": "ripple", 
+        "name": "Ripple", 
+        "symbol": "XRP", 
+        "rank": "3", 
+        "price_usd": "0.673913", 
+        "price_btc": "0.00008128", 
+        "24h_volume_usd": "595946000.0", 
+        "market_cap_usd": "26365360125.0", 
+        "available_supply": "39122794968.0", 
+        "total_supply": "99992362643.0", 
+        "max_supply": "100000000000", 
+        "percent_change_1h": "0.27", 
+        "percent_change_24h": "5.51", 
+        "percent_change_7d": "34.92", 
+        "last_updated": "1523827141"
+    }, 
+    {
+        "id": "bitcoin-cash", 
+        "name": "Bitcoin Cash", 
+        "symbol": "BCH", 
+        "rank": "4", 
+        "price_usd": "775.765", 
+        "price_btc": "0.0935605", 
+        "24h_volume_usd": "324808000.0", 
+        "market_cap_usd": "13246420105.0", 
+        "available_supply": "17075300.0", 
+        "total_supply": "17075300.0", 
+        "max_supply": "21000000.0", 
+        "percent_change_1h": "-0.02", 
+        "percent_change_24h": "4.73", 
+        "percent_change_7d": "18.04", 
+        "last_updated": "1523827153"
+    }, 
+    {
+        "id": "litecoin", 
+        "name": "Litecoin", 
+        "symbol": "LTC", 
+        "rank": "5", 
+        "price_usd": "130.657", 
+        "price_btc": "0.0157578", 
+        "24h_volume_usd": "266318000.0", 
+        "market_cap_usd": "7329686243.0", 
+        "available_supply": "56098688.0", 
+        "total_supply": "56098688.0", 
+        "max_supply": "84000000.0", 
+        "percent_change_1h": "-0.13", 
+        "percent_change_24h": "2.59", 
+        "percent_change_7d": "10.58", 
+        "last_updated": "1523827141"
+    }, 
+    {
+        "id": "eos", 
+        "name": "EOS", 
+        "symbol": "EOS", 
+        "rank": "6", 
+        "price_usd": "8.34384", 
+        "price_btc": "0.0010063", 
+        "24h_volume_usd": "969023000.0", 
+        "market_cap_usd": "6632909397.0", 
+        "available_supply": "794946859.0", 
+        "total_supply": "900000000.0", 
+        "max_supply": "1000000000.0", 
+        "percent_change_1h": "0.46", 
+        "percent_change_24h": "-1.92", 
+        "percent_change_7d": "39.23", 
+        "last_updated": "1523827152"
+    }, 
+    {
+        "id": "cardano", 
+        "name": "Cardano", 
+        "symbol": "ADA", 
+        "rank": "7", 
+        "price_usd": "0.218776", 
+        "price_btc": "0.00002639", 
+        "24h_volume_usd": "164969000.0", 
+        "market_cap_usd": "5672220784.0", 
+        "available_supply": "25927070538.0", 
+        "total_supply": "31112483745.0", 
+        "max_supply": "45000000000.0", 
+        "percent_change_1h": "0.16", 
+        "percent_change_24h": "8.25", 
+        "percent_change_7d": "39.03", 
+        "last_updated": "1523827155"
+    }, 
+    {
+        "id": "stellar", 
+        "name": "Stellar", 
+        "symbol": "XLM", 
+        "rank": "8", 
+        "price_usd": "0.293647", 
+        "price_btc": "0.00003542", 
+        "24h_volume_usd": "126868000.0", 
+        "market_cap_usd": "5449998212.0", 
+        "available_supply": "18559693143.0", 
+        "total_supply": "103847435165", 
+        "max_supply": null, 
+        "percent_change_1h": "0.91", 
+        "percent_change_24h": "16.67", 
+        "percent_change_7d": "42.48", 
+        "last_updated": "1523827144"
+    }, 
+    {
+        "id": "iota", 
+        "name": "IOTA", 
+        "symbol": "MIOTA", 
+        "rank": "9", 
+        "price_usd": "1.64433", 
+        "price_btc": "0.00019831", 
+        "24h_volume_usd": "126724000.0", 
+        "market_cap_usd": "4570465030.0", 
+        "available_supply": "2779530283.0", 
+        "total_supply": "2779530283.0", 
+        "max_supply": "2779530283.0", 
+        "percent_change_1h": "-1.05", 
+        "percent_change_24h": "17.28", 
+        "percent_change_7d": "60.6", 
+        "last_updated": "1523827152"
+    }, 
+    {
+        "id": "neo", 
+        "name": "NEO", 
+        "symbol": "NEO", 
+        "rank": "10", 
+        "price_usd": "68.7789", 
+        "price_btc": "0.00829502", 
+        "24h_volume_usd": "120093000.0", 
+        "market_cap_usd": "4470628500.0", 
+        "available_supply": "65000000.0", 
+        "total_supply": "100000000.0", 
+        "max_supply": "100000000.0", 
+        "percent_change_1h": "-0.47", 
+        "percent_change_24h": "6.23", 
+        "percent_change_7d": "39.93", 
+        "last_updated": "1523827148"
+    }
+];
+
+
+const cryptoArrayNew = cryptoArray.map(d => ({
+    "name": d.name,
+    "value": d.market_cap_usd,
+    "price": d.price_usd,
+    "change24":d.percent_change_24h
+}));
+
+const parentCrytpo = {
+  "Name": "A1",
+  "children": cryptoArrayNew
+}
+
+const treemapLayout = d3.treemap()
+  .size([800, 400])
+  .paddingOuter(5);
+
+//console.log(parentCrytpo);
+
+let root = d3.hierarchy(parentCrytpo, d =>  d.children);
+
+root.sum(d => d.value);
+
+treemapLayout(root);
+
+//console.log(root);
+d3.select('svg g')
+  .selectAll('rect')
+  .data(root.descendants())
+  .enter()
+  .append('rect')
+  .attr('x', function(d) { return d.x0; })
+  .attr('y', function(d) { return d.y0; })
+  .attr('width', function(d) { return d.x1 - d.x0; })
+  .attr('height', function(d) { return d.y1 - d.y0; })
+
+  </script>
+</body>
+</html>
